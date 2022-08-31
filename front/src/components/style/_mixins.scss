@@ -1,0 +1,20 @@
+@mixin fadein-ani {
+  animation: fadein 3s;
+  -moz-animation: fadein 3s; /* Firefox */
+  -webkit-animation: fadein 3s; /* Safari and Chrome */
+  -o-animation: fadein 3s; /* Opera */
+}
+
+@mixin mvp-button($color) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  height: 4rem;
+  background-color: $color;
+  border: none;
+  border-radius: 1rem;
+  padding: 0 $spacing-smallest;
+  text-transform: uppercase;
+  color: $theme-color-white;
+}

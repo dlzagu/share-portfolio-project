@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import testValidate from '../util/validation/testValidate';
+import { useCallback, useEffect, useState } from "react";
+import validation from "../util/validation/validation";
 
 export const useForm = (initialState) => {
   const [values, setValues] = useState(initialState);
@@ -8,7 +8,7 @@ export const useForm = (initialState) => {
   const handleChange = useCallback(
     (e, date) => {
       if (date) {
-        const name = 'certificationDate';
+        const name = "certificationDate";
         setValues({ ...values, [name]: date });
         return;
       }
@@ -19,7 +19,7 @@ export const useForm = (initialState) => {
   );
 
   useEffect(() => {
-    setIsValid(testValidate(values));
+    setIsValid(validation(values));
   }, [values]);
 
   return [values, isValid, handleChange];

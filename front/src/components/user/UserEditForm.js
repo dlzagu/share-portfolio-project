@@ -1,7 +1,10 @@
 import useModal from "../../hooks/useModal";
-import { Form } from "react-bootstrap";
+import UserModal from "../modal/UserModal";
 import AlertModal from "../modal/AlertModal";
+import UserConfirmPassword from "./UserConfirmPassword";
+import { Form } from "react-bootstrap";
 import { useForm } from "../../hooks/useForm";
+import { useState } from "react";
 import * as Api from "../../api";
 import {
   varColors,
@@ -17,11 +20,18 @@ const UserEditForm2 = ({ user, setIsEditing, setUser }) => {
     email: user.email,
     description: user.description,
   });
+  const [error, setError] = useState(false);
 
   const [
     isShow,
     onShowButtonClickEventHandler,
     onCloseButtonClickEventHandler,
+  ] = useModal(false);
+
+  const [
+    isPasswordShow,
+    onPasswordShowButtonClickEventHandler,
+    onPasswordCloseButtonClickEventHandler,
   ] = useModal(false);
 
   const handleSubmitClick = async (e) => {
@@ -30,14 +40,19 @@ const UserEditForm2 = ({ user, setIsEditing, setUser }) => {
       onShowButtonClickEventHandler();
       return;
     }
-
-    const userObj = { ...values, id: user.id };
-    const updatedUser = await fetchUpdateUserInformation.call(this, userObj);
-    setUser({
-      ...updatedUser,
-      profileUrl: user?.profileUrl,
-    });
-    setIsEditing(false);
+    try {
+      const userObj = { ...values, id: user.id };
+      const updatedUser = await fetchUpdateUserInformation.call(this, userObj);
+      setUser({
+        ...updatedUser.data,
+        profileImageUrl:
+          updatedUser.data.profileImageUrl ||
+          `${process.env.PUBLIC_URL}/images/profile.PNG`,
+      });
+      setIsEditing(false);
+    } catch (e) {
+      setError(true);
+    }
   };
 
   const handlerCancelClick = () => {
@@ -57,7 +72,7 @@ const UserEditForm2 = ({ user, setIsEditing, setUser }) => {
           onChange={handleChange}
         />
         <input
-          type="email"
+          type="text"
           placeholder="Email..."
           style={inputStyle}
           value={values?.email}
@@ -67,6 +82,11 @@ const UserEditForm2 = ({ user, setIsEditing, setUser }) => {
         {!isValid.email && (
           <Form.Text className="text-danger">
             Please check your email.
+          </Form.Text>
+        )}
+        {error && (
+          <Form.Text className="text-danger">
+            이미 사용중인 이메일입니다.
           </Form.Text>
         )}
         <input
@@ -85,6 +105,13 @@ const UserEditForm2 = ({ user, setIsEditing, setUser }) => {
         <button type="submit" style={buttonStyle} onClick={handleSubmitClick}>
           CONFIRM
         </button>
+        <button
+          type="button"
+          style={buttonStyle}
+          onClick={onPasswordShowButtonClickEventHandler}
+        >
+          비밀번호 변경하기
+        </button>
         <button style={buttonCancelStyle} onClick={handlerCancelClick}>
           CANCEL
         </button>
@@ -94,12 +121,18 @@ const UserEditForm2 = ({ user, setIsEditing, setUser }) => {
         isShow={isShow}
         onCloseButtonClickEvent={onCloseButtonClickEventHandler}
       />
+      <UserModal
+        isShow={isPasswordShow}
+        onCloseButtonClickEvent={onPasswordCloseButtonClickEventHandler}
+      >
+        <UserConfirmPassword user={user} />
+      </UserModal>
     </div>
   );
 };
 
 async function fetchUpdateUserInformation(user) {
-  const res = await Api.put(`users/${user.id}`, {
+  const res = await Api.put(`api/users/${user.id}`, {
     name: user.name,
     email: user.email,
     description: user.description,
@@ -121,6 +154,7 @@ const titleStyle = {
 
 const formStyle = {
   margin: "auto",
+  width: "100%",
   color: varColors.light.coolBlack,
   fontFamily: "system-ui",
 };

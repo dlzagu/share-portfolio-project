@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
-
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserStateContext, DispatchContext } from "../App";
+import Storage from "../storage/storage";
 
-function HeaderTest() {
+function Header() {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -11,7 +11,6 @@ function HeaderTest() {
   const userState = useContext(UserStateContext);
   const dispatch = useContext(DispatchContext);
 
-  // 전역상태에서 user가 null이 아니라면 로그인 성공 상태임.
   const isLogin = !!userState.user;
 
   const menuItems = [
@@ -26,17 +25,14 @@ function HeaderTest() {
   ];
 
   const logout = () => {
-    // sessionStorage 에 저장했던 JWT 토큰을 삭제함.
-    sessionStorage.removeItem("userToken");
-    // dispatch 함수를 이용해 로그아웃함.
+    Storage.removeItem();
     dispatch({ type: "LOGOUT" });
-    // 기본 페이지로 돌아감.
     navigate("/");
   };
 
   return (
-    <>
-      <div flex-container>
+    <React.Fragment>
+      <div>
         <div className={`navmenu ${open ? "active" : ""}`}>
           <div className="navmenu-container">
             <div className="menu">
@@ -52,19 +48,23 @@ function HeaderTest() {
             <div className="content">
               <p>
                 <em>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Quisquam necessitatibus incidunt ut officiis explicabo
-                  inventore. <br />
+                  My advice is never do tomorrow what you can do today.
+                  <br />
+                  Procrastination is the thief of time. Collar him!
+                  <br />
                 </em>
               </p>
             </div>
             <div className="content">
-              <h3>Hire Me</h3>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Quisquam necessitatibus incidunt ut officiisexplicabo inventore.{" "}
-                <br />
-                <a href="#">myemail@gmail.com</a>
+                <em>
+                  hhs950120@gmail.com <br />
+                  foxmon1524@gmail.com <br />
+                  peelsob4d@gmail.com
+                  <br />
+                  origin1508@gmail.com <br />
+                  eodnsdlekd@gmail.com <br />
+                </em>
               </p>
             </div>
           </div>
@@ -72,8 +72,8 @@ function HeaderTest() {
       </div>
       <div className="header-navbar">
         <div className="navbar-container">
-          <div className="navbar-brand" onClick={() => navigate("/")}>
-            MyPortfolio.
+          <div className="navbar-brand" onClick={() => navigate("/network")}>
+            Share Your Portfolio.
           </div>
           <div
             className={`burger-menu ${open ? "active" : ""}`}
@@ -83,8 +83,8 @@ function HeaderTest() {
           </div>
         </div>
       </div>
-    </>
+    </React.Fragment>
   );
 }
 
-export default HeaderTest;
+export default Header;

@@ -1,56 +1,86 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Container, Row } from 'react-bootstrap';
-
-import * as Api from '../../api';
-// import UserCard from "./UserCard";
-import UserCard2 from './UserCard2';
-import { UserStateContext } from '../../App';
+import React, { useEffect, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserStateContext } from "../../App";
+import Users from "./Users";
+import UsersBookmarked from "./UsersBookmarked";
 
 function Network() {
   const navigate = useNavigate();
   const userState = useContext(UserStateContext);
-  // useState 훅을 통해 users 상태를 생성함.
-  const [users, setUsers] = useState([]);
+  const [selectedTab, setSelectedTab] = useState("all");
 
   useEffect(() => {
-    // 만약 전역 상태의 user가 null이라면, 로그인 페이지로 이동함.
     if (!userState.user) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
-    // "userlist" 엔드포인트로 GET 요청을 하고, users를 response의 data로 세팅함.
-    Api.get('userlist').then((res) => {
-      const data = res.data;
-      const userArr = [];
-      data.forEach((v) => {
-        const image =
-          v.profileUrl || `${process.env.PUBLIC_URL}/images/profile.PNG`;
-        userArr.push({ ...v, profileUrl: image });
-      });
-      setUsers(userArr);
-    });
   }, [userState, navigate]);
 
   return (
-    <div className='network-container'>
-      <section className='section network-content'>
-        <div className='title-container'>
-          <h2 className='network-title'>Hey, I'm Johan Stanworth</h2>
-          <p className='network-sub-title'>
-            Freelance Creative &amp; Professional Graphics Designer
+    <div className="network-container">
+      <section className="section network-content">
+        <div className="title-container">
+          <h2 className="network-title">
+            Shall we check other people's portfolios?
+          </h2>
+          <p className="network-sub-title">
+            Shall we check other people's portfolios? <br></br>Click the Card
+            that you want!!
           </p>
         </div>
-        <div className='usercard-container'>
-          <div className='usercard'>
-            {users.map((user) => (
-              <UserCard2 key={user.id} user={user} isNetwork />
-            ))}
-          </div>
+        <div className="tabs-container" style={tabMenuStyle}>
+          <li
+            id="all"
+            className={selectedTab === "all" ? "tab active" : "tab"}
+            onClick={(e) => setSelectedTab(e.target.id)}
+            style={selectedTab === "all" ? activeTabStyle : tabStyle}
+          >
+            All users
+          </li>
+          <li
+            id="bookmarks"
+            className={selectedTab === "bookmarks" ? "tab active" : "tab"}
+            onClick={(e) => setSelectedTab(e.target.id)}
+            style={selectedTab === "bookmarks" ? activeTabStyle : tabStyle}
+          >
+            Bookmarks
+          </li>
         </div>
+        {selectedTab === "all" ? <Users /> : <UsersBookmarked />}
       </section>
     </div>
   );
 }
 
 export default Network;
+
+const tabMenuStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  width: "100%",
+  listStyle: "none",
+  textAlign: "center",
+  fontSize: "2rem",
+  fontFamily: "Raleway",
+  cursor: "pointer",
+};
+
+const tabStyle = {
+  flex: 1,
+  height: "40px",
+  lineHeight: "40px",
+  backgroundColor: "#f2f2f3",
+  borderBottom: "3px solid #0d1e2d",
+  transition: "all 0.3s",
+};
+
+const activeTabStyle = {
+  flex: 1,
+  height: "40px",
+  lineHeight: "40px",
+  fontWeight: "bold",
+  backgroundColor: "#0d1e2d",
+  borderBottom: "3px solid #0d1e2d",
+  color: "white",
+  transition: "all 0.3s",
+};

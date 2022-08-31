@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 
-function getmulter(storePath, fileSizeWeight) {
+function getMulter(storePath, fileSizeWeight) {
   /**
    * multer 설정
    */
@@ -25,4 +25,4 @@ function getmulter(storePath, fileSizeWeight) {
   return multer({ storage, limits });
 }
 
-export default getmulter;
+export default getMulter;

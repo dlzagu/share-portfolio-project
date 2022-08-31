@@ -1,29 +1,30 @@
-import React, { useState } from 'react';
-import ProjectCard from './ProjectCard';
-import ProjectEditForm from './ProjectEditForm';
+import React, { useState } from "react";
+import ProjectCard from "./ProjectCard";
+import ProjectEditForm from "./ProjectEditForm";
 
-function Project({ project, isEditable, getUser }) {
+function Project({ project, isEditable, fetchProjects }) {
   const [isEditing, setIsEditing] = useState(false);
   const handleIsEditing = () => {
     setIsEditing(!isEditing);
   };
+
   return (
-    <>
+    <React.Fragment>
       {isEditing ? (
         <ProjectEditForm
           project={project}
-          editClick={handleIsEditing}
-          getUser={getUser}
+          onCancelButtonClickEvent={handleIsEditing}
+          fetchProjects={fetchProjects}
         />
       ) : (
         <ProjectCard
           project={project}
           isEditable={isEditable}
-          editClick={handleIsEditing}
-          getUser={getUser}
+          onEditButtonClickEvent={handleIsEditing}
+          fetchProjects={fetchProjects}
         />
       )}
-    </>
+    </React.Fragment>
   );
 }
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import BookmarkButton from "../bookmark/BookmarkButton";
 
 function UserCard2({ user, setIsEditing, isEditable, isNetwork }) {
   const navigate = useNavigate();
@@ -13,9 +14,6 @@ function UserCard2({ user, setIsEditing, isEditable, isNetwork }) {
     navigate(`/users/${user.id}`);
   };
 
-  // UserInformation Component
-  // 여기서만 한 번 쓰고 사용하지 않음.
-  // jsx 부분의 코드 길이가 길어지므로 이렇게 사용.
   const UserInformation = () => {
     return (
       <div className="network-item-info">
@@ -36,12 +34,15 @@ function UserCard2({ user, setIsEditing, isEditable, isNetwork }) {
       <div className="item-wrap" onClick={handlerPortfolioClick}>
         <UserInformation />
         <img
-          className="item-img-style"
-          // src='https://cdn.pixabay.com/photo/2018/01/10/23/53/rabbit-3075088_1280.png'
-          src={user.profileUrl}
+          className="item-img"
+          src={
+            user.profileImageUrl ||
+            `${process.env.PUBLIC_URL}/images/profile.PNG`
+          }
           alt="userImg"
         />
       </div>
+      <BookmarkButton user={user} />
     </div>
   );
 }

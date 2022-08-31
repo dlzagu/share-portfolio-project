@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Col, Row, Form, Button } from "react-bootstrap";
 import { useForm } from "../../hooks/useForm";
-
 import * as Api from "../../api";
 
 function RegisterForm() {
@@ -12,8 +11,8 @@ function RegisterForm() {
     password: "",
     confirmPassword: "",
     name: "",
-    nickname: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const isPasswordSame = values.password === values.confirmPassword;
 
@@ -21,19 +20,15 @@ function RegisterForm() {
     e.preventDefault();
 
     try {
-      // "user/register" 엔드포인트로 post요청함.
-      const { email, password, name, nickname } = values;
-      await Api.post("user/register", {
+      const { email, password, name } = values;
+      await Api.post("api/user/register", {
         email,
         password,
         name,
-        nickname,
       });
-
-      // 로그인 페이지로 이동함.
       navigate("/login");
     } catch (err) {
-      console.log("회원가입에 실패하였습니다.", err);
+      setErrorMessage(err.response.data.message);
     }
   };
 
@@ -43,14 +38,14 @@ function RegisterForm() {
         <div className="title-container">
           <h2 className="register-title">Register</h2>
           <p className="register-sub-title">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-            necessitatibus incidunt ut officiis explicabo inventore.
+            Welcome to SYP. Please register to use the service.
+            <br></br>Share Your Portfolio !
           </p>
         </div>
         <Container>
           <Row className="justify-content-md-center mt-5">
             <Col lg={8}>
-              <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit} className="register-form">
                 <Form.Group controlId="formBasicEmail">
                   <Form.Label>이메일 주소</Form.Label>
                   <Form.Control
@@ -113,22 +108,9 @@ function RegisterForm() {
                     </Form.Text>
                   )}
                 </Form.Group>
-
-                <Form.Group controlId="formBasicNickname" className="mt-3">
-                  <Form.Label>닉네임</Form.Label>
-                  <Form.Control
-                    type="text"
-                    autoComplete="off"
-                    name="nickname"
-                    onChange={handleChange}
-                  />
-                  {!isValid.nickname && (
-                    <Form.Text className="text-danger">
-                      닉네임은 1글자 이상으로 설정해 주세요.
-                    </Form.Text>
-                  )}
-                </Form.Group>
-
+                {errorMessage && (
+                  <Form.Text className="text-danger">{errorMessage}</Form.Text>
+                )}
                 <Form.Group as={Row} className="mt-3 text-center">
                   <Col sm={{ span: 20 }}>
                     <Button

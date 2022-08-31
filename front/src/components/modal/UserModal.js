@@ -20,6 +20,7 @@ const UserModal = ({ isShow, onCloseButtonClickEvent, children }) => {
       onHide={handleCloseButtonClick}
       backdrop="static"
       keyboard={false}
+      scrollable={true}
     >
       {children}
       <Button variant="primary" onClick={handleCloseButtonClick}>

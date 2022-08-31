@@ -1,37 +1,71 @@
-import { EducationModel } from '../schemas/education';
+import { EducationModel } from "../schemas/education";
 
 class Education {
-  static async create(newEducation) {
-    console.log('모델' + newEducation);
-    const createdEducation = await EducationModel.create(newEducation);
-    const { _id, university, major, status } = createdEducation;
-    const resultEducation = { _id, university, major, status };
-    return resultEducation;
+  /**
+   * 학력 정보 생성
+   * create()
+   */
+  static async create({ university, major, status, userId }) {
+    const createdEducation = await EducationModel.create({
+      university,
+      major,
+      status,
+      userId,
+    });
+
+    return createdEducation;
   }
 
+  /**
+   * 유저 아이디로 학력 정보 조회
+   * findByUserId()
+   */
   static async findByUserId(userId) {
-    console.log('모델' + userId);
-    const educationData = await EducationModel.find({ userId }).select(
-      '_id university major status'
-    );
-    console.log(educationData);
+    const educationData = await EducationModel.find({ userId })
+      .select("_id university major status")
+      .lean();
+
     return educationData;
   }
 
-  static async updateByEducationId(data) {
-    console.log('모델' + data);
-    const { educationId, university, major, status } = data;
-    const modifiedEducationData = await EducationModel.findOneAndUpdate(
-      { _id: educationId },
-      {
-        university,
-        major,
-        status,
-      },
-      { new: true }
-    ).select('_id userId university major status');
-    console.log(modifiedEducationData);
-    return modifiedEducationData;
+  /**
+   * _id로 학력 정보 조회
+   * findByEducationId()
+   */
+  static async findByEducationId(educationId) {
+    const education = await EducationModel.findOne({ _id: educationId }).lean();
+    return education;
+  }
+
+  /**
+   * 학력 정보 업데이트
+   * update()
+   */
+  static async update({ educationId, newValues }) {
+    const filter = { _id: educationId };
+    const option = { returnOriginal: false };
+
+    const updatedEducation = await EducationModel.findOneAndUpdate(
+      filter,
+      newValues,
+      option
+    )
+      .select("_id university major status")
+      .lean();
+
+    return updatedEducation;
+  }
+
+  /**
+   * _id로 학력 정보 삭제
+   * deleteByEducationId()
+   */
+  static async deleteByEducationId(educationId) {
+    const deletedEducation = await EducationModel.deleteOne({
+      _id: educationId,
+    }).lean();
+
+    return deletedEducation;
   }
 }
 

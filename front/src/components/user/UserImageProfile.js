@@ -13,6 +13,7 @@ const UserImageProfileUpload = ({ user, onChangeImageUploadEvent }) => {
 
   const previewImageSrc = previewImg ? previewImg : user?.profileImageUrl;
   const acceptedFile = ["image/jpg", "image/png", "image/jpeg"];
+  const isConfirmButtonDisabled = !uploadedImg ? true : false;
 
   const handleImageUpload = (e) => {
     setUploadedImg(e.target.files[0]);
@@ -32,7 +33,7 @@ const UserImageProfileUpload = ({ user, onChangeImageUploadEvent }) => {
     <form style={containerStyle}>
       <div style={titleStyle}>IMAGE PREVIEW</div>
       <div style={previewWrapperStyle}>
-        <img style={previewStyle} src={previewImageSrc} alt="profile-image" />{" "}
+        <img style={previewStyle} src={previewImageSrc} alt="profileImage" />{" "}
       </div>
       <label htmlFor="image-input" style={imageLabelStyle}>
         Image upload
@@ -48,6 +49,7 @@ const UserImageProfileUpload = ({ user, onChangeImageUploadEvent }) => {
       <button
         type="submit"
         style={buttonStyle}
+        disabled={isConfirmButtonDisabled}
         onClick={handleImageUploadSubmit}
       >
         CONFIRM

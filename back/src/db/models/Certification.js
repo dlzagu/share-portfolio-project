@@ -1,34 +1,74 @@
-import { CertificationModel } from '../schemas/certification';
+import { CertificationModel } from "../schemas/certification";
 
 class Certification {
-  static async create(data) {
-    const createdCertification = await CertificationModel.create(data);
-    const { _id, title, detail, certificationDate } = createdCertification;
-    /**
-     * 이부분도 fix 예정
-     */
-    return { _id, title, detail, certificationDate };
+  /**
+   * 자격증 정보 생성
+   * create()
+   */
+  static async create({ title, detail, certificationDate, userId }) {
+    const createdCertification = await CertificationModel.create({
+      title,
+      detail,
+      certificationDate,
+      userId,
+    });
+
+    return createdCertification;
   }
 
+  /**
+   * 유저 아이디로 자격증 정보 조회
+   * findByUserId()
+   */
   static async findByUserId(userId) {
-    const certificationData = await CertificationModel.find({ userId }).select(
-      '_id title detail certificationDate'
-    );
+    const certificationData = await CertificationModel.find({ userId })
+      .select("_id title detail certificationDate")
+      .lean();
+
     return certificationData;
   }
 
-  static async updateByCertificationId(data) {
-    const { certificationId, title, detail, certificationDate } = data;
-    const modifiedCertificationData = await CertificationModel.findOneAndUpdate(
-      { _id: certificationId },
-      {
-        title,
-        detail,
-        certificationDate,
-      },
-      { new: true }
-    ).select('_id title detail certificationDate');
-    return modifiedCertificationData;
+  /**
+   * _id로 자격증 정보 조회
+   * findByCertificationId()
+   */
+  static async findByCertificationId(certificationId) {
+    const certification = await CertificationModel.findOne({
+      _id: certificationId,
+    }).lean();
+
+    return certification;
+  }
+
+  /**
+   * 자격증 정보 업데이트
+   * update()
+   */
+  static async update({ certificationId, newValues }) {
+    const filter = { _id: certificationId };
+    const option = { returnOriginal: false };
+
+    const updatedCertification = await CertificationModel.findOneAndUpdate(
+      filter,
+      newValues,
+      option
+    )
+      .select("_id title detail certificationDate")
+      .lean();
+
+    return updatedCertification;
+  }
+
+  /**
+   * 자격증 정보 삭제
+   * deleteByCertiicationId()
+   */
+  static async deleteByCertificationId(certificationId) {
+    const deletedCertification = await CertificationModel.deleteOne({
+      _id: certificationId,
+    }).lean();
+
+    return deletedCertification;
   }
 }
 

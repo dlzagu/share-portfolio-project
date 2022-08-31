@@ -1,28 +1,66 @@
-import { Award } from '../db';
+import { Award } from "../db";
 
 class awardService {
-  static async addAwardInfo(data) {
-    console.log('서비스', data);
-    const award = await Award.create(data);
-    return award;
+  /**
+   * 수상 이력 추가
+   * addAwardInfo()
+   */
+  static async addAwardInfo({ title, detail, userId }) {
+    const award = await Award.create({ title, detail, userId });
+    return { title: award.title, detail: award.detail, _id: award._id };
   }
 
+  /**
+   * 수상 이력 조회
+   * getAwardInfo()
+   */
   static async getAwardInfo(userId) {
-    //console.log('서비스' + userId);
-    const award = await Award.findByUserId(userId);
-    if (!award) {
-      const error = new Error('수상 이력 정보가 존재하지 않습니다.');
-      return { error };
+    const awards = await Award.findByUserId(userId);
+
+    // 받아온 데이터가 없을 시 빈 배열 리턴
+    if (awards.length < 1) {
+      return [];
     }
-    return award;
+
+    return awards;
   }
 
-  static async setAwardInfo(data) {
-    console.log('서비스' + data);
-    const award = await Award.updateByAwardId(data);
-    return award;
+  /**
+   * 수상 이력 수정
+   * setAwardInfo()
+   */
+  static async setAwardInfo({ awardId, toUpdate }) {
+    const award = await Award.findByAwardId(awardId);
+
+    // 수정할 대상이 데이터베이스에 없으면 에러 발생
+    if (!award) {
+      throw new Error("awardId에 대응하는 데이터가 존재하지 않습니다.");
+    }
+
+    const { title, detail } = toUpdate;
+
+    const newValues = {
+      ...(title && { title }),
+      ...(detail && { detail }),
+    };
+
+    return Award.update({ awardId, newValues });
   }
 
+  /**
+   * 수상 이력 삭제
+   * deleteAwardInfo()
+   */
+  static async deleteAwardInfo(awardId) {
+    const award = await Award.deleteByAwardId(awardId);
+
+    // 삭제한 데이터가 없으면 에러 발생
+    if (award.deletedCount < 1) {
+      throw new Error("존재하지 않는 도큐먼트입니다.");
+    }
+
+    return award.deletedCount;
+  }
 }
 
 export { awardService };

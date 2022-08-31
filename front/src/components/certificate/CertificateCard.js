@@ -1,50 +1,51 @@
-import { Card } from "react-bootstrap";
+import React from "react";
 import useModal from "../../hooks/useModal";
 import ConfirmModal from "../modal/ConfirmModal";
+import * as Api from "../../api";
 
-function CertificateCard({ certificate, isEditable, setIsEditing }) {
-  const [
-    isShow,
-    onShowButtonClickEventHandler,
-    onCloseButtonClickEventHandler,
-  ] = useModal(false);
+function CertificateCard({
+  certification,
+  isEditable,
+  onEditButtonClickEvent,
+  fetchCertifications,
+}) {
+  const [isShow, handleShowButtonClickEvent, handleCloseButtonClickEvent] =
+    useModal(false);
+
+  const { title, detail, certificationDate } = certification || {};
+
+  const handleDeleteCertification = async () => {
+    await Api.delete("api/certification", certification._id);
+    fetchCertifications();
+  };
 
   return (
-    <Card.Text>
-      <div className="mvp-content-detail">
-        <div className="mvp-info">
-          <h3 className="title">{certificate.title}</h3>
-          <p className="sub-title">{certificate.detail}</p>
-          <p className="sub-title">
-            {certificate.certificationDate.split("T")[0]}
-          </p>
-        </div>
-        {isEditable && (
-          <div className="mvp-management">
-            <button
-              className="mvp-edit-button"
-              onClick={() => setIsEditing(true)}
-            >
-              편집
-            </button>
-            <button
-              className="mvp-delete-button"
-              onClick={onShowButtonClickEventHandler}
-            >
-              삭제
-            </button>
-          </div>
-        )}
+    <div className="mvp-content-detail">
+      <div className="mvp-info">
+        <h3 className="title">{title}</h3>
+        <p className="sub-title">{detail}</p>
+        <p className="sub-title">{certificationDate.split("T")[0]}</p>
       </div>
-      {isShow && (
-        <ConfirmModal
-          msg="정말 삭제하시겠습니까?"
-          isShow={isShow}
-          onCloseButtonClickEvent={onCloseButtonClickEventHandler}
-          onCheckButtonClickEvent={onCloseButtonClickEventHandler}
-        />
+      {isEditable && (
+        <div className="mvp-management">
+          <button className="mvp-edit-button" onClick={onEditButtonClickEvent}>
+            EDIT
+          </button>
+          <button
+            className="mvp-delete-button"
+            onClick={handleShowButtonClickEvent}
+          >
+            DELETE
+          </button>
+        </div>
       )}
-    </Card.Text>
+      <ConfirmModal
+        isShow={isShow}
+        onCloseButtonClickEvent={handleCloseButtonClickEvent}
+        onCheckButtonClickEvent={handleDeleteCertification}
+        msg={`${title}(을)를 목록에서 삭제하시겠습니까?`}
+      />
+    </div>
   );
 }
 

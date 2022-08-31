@@ -7,6 +7,7 @@ import EducationContainer from "./education/EducationContainer";
 import AwardContainer from "./award/AwardContainer";
 import ProjectContainer from "./project/ProjectContainer";
 import CertificateContainer from "./certificate/CertificateContainer";
+import CommentForm from "./comment/CommentForm";
 import BookmarkButton from "./bookmark/BookmarkButton";
 import Spinner from "./spinner/Spinner";
 import "./style/app.scss";
@@ -93,6 +94,10 @@ function Portfolio() {
               isEditable={portfolioOwner.id === userState.user?.id}
             />
           </div>
+          <CommentForm
+            portfolioOwnerId={portfolioOwner.id}
+            isEditable={portfolioOwner.id === userState.user?.id}
+          />
         </div>
       </section>
     </div>

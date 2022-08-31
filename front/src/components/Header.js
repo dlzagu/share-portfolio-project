@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserStateContext, DispatchContext } from "../App";
 import Storage from "../storage/storage";
 

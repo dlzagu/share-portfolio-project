@@ -13,7 +13,6 @@ commentRouter.post("/:id", login_required, async (req, res, next) => {
         "headers의 Content-Type을 application/json으로 설정해주세요"
       );
     }
-    console.log("hello");
 
     const comment = req.body.comment;
     const ownerUserId = req.body.ownerUserId;
@@ -35,7 +34,6 @@ commentRouter.get("/list/:id", login_required, async (req, res, next) => {
   try {
     const ownerUserId = req.params.id;
 
-    console.log("hi", ownerUserId);
     const commentlist = await CommentService.getComments({
       ownerUserId,
     });
@@ -51,3 +49,26 @@ commentRouter.get("/list/:id", login_required, async (req, res, next) => {
 });
 
 export { commentRouter };
+//수정
+commentRouter.put("/:id", login_required, async (req, res, next) => {
+  try {
+    //URI에서 수정할 comment의 id를 받아옴
+    const commentId = req.params.id;
+
+    const comment = req.body.comment;
+    const toUpdate = { comment };
+
+    const updatedComment = await CommentService.setComments({
+      toUpdate,
+      commentId,
+    });
+
+    if (updatedComment.errorMessage) {
+      throw new Error(updatedComment.errorMessage);
+    }
+
+    res.status(200).json(updatedComment);
+  } catch (err) {
+    next(err);
+  }
+});

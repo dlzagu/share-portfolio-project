@@ -29,6 +29,11 @@ class CommentService {
     console.log("comments", comments);
     return comments;
   }
+
+  static async setComments({ toUpdate, commentId }) {
+    const comment = await Comment.update({ commentId, toUpdate });
+    return comment;
+  }
 }
 
 export { CommentService };

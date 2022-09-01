@@ -15,7 +15,7 @@ const ContentEdit = ({ comment, setIsEdit, fetch }) => {
 
   const editHandler = async (e) => {
     e.preventDefault();
-    await Api.put(`comments/${comment.id}`, inputs);
+    await Api.put(`api/comment/${comment._id}`, inputs);
 
     setIsEdit(false);
     fetch();

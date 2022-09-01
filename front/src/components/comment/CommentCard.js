@@ -9,8 +9,7 @@ import { UserStateContext } from "../../App";
 const ContentCard = ({ comment, comment_id, setComments, fetch }) => {
   const [isEdit, setIsEdit] = useState(false);
   const userState = useContext(UserStateContext);
-  const loginId = userState.user.id;
-  console.log("comment", comment);
+  const loginId = userState.user?.id;
   const handleDelete = async () => {
     await Api.delete("comments", comment_id);
     fetch();

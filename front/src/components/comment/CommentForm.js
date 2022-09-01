@@ -3,7 +3,7 @@ import { Form, Card, Button } from "react-bootstrap";
 import * as Api from "../../api";
 import Comments from "./Comments";
 
-const ContentForm = ({ portfolioOwnerId }) => {
+const ContentForm = ({ portfolioOwnerId, writerId }) => {
   const [comments, setComments] = useState([]);
 
   const fetch = async () => {
@@ -17,13 +17,13 @@ const ContentForm = ({ portfolioOwnerId }) => {
 
   // 입력받은 방명록을 저장하기 위한 state
   const [inputs, setInputs] = useState({
-    userId: "",
+    ownerUserId: "",
     comment: "",
   });
 
   const onChange = (e) => {
     setInputs({
-      user_id: portfolioOwnerId,
+      ownerUserId: portfolioOwnerId,
       comment: e.target.value,
     });
   };
@@ -33,7 +33,7 @@ const ContentForm = ({ portfolioOwnerId }) => {
   const addHandler = async (e) => {
     e.preventDefault();
     try {
-      await Api.post("comment/create", inputs);
+      await Api.post(`api/comment/${writerId}`, inputs);
       fetch();
       setInputs({
         ...inputs,

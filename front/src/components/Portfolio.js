@@ -96,6 +96,7 @@ function Portfolio() {
           </div>
           <CommentForm
             portfolioOwnerId={portfolioOwner.id}
+            writerId={userState.user?.id}
             isEditable={portfolioOwner.id === userState.user?.id}
           />
         </div>

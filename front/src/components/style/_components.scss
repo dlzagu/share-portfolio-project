@@ -7,14 +7,17 @@
   display: flex;
   width: 100%;
   max-width: $theme-max-width;
-  justify-content: space-around;
-  padding: 5rem $font-size-medium;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0rem $font-size-medium;
+  @media only screen and (max-width: $bp-small) {
+    justify-content: center;
+  }
 }
-
 .navmenu {
   background: $theme-color-dark-1;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   visibility: hidden;
   height: 0vh;
   transition: all 0.2s;
@@ -451,7 +454,7 @@
     justify-content: space-between;
   }
   .mvp-info .title {
-    font-size: $font-size-large;
+    font-size: $font-size-small;
     margin-left: $spacing-smallest;
   }
 

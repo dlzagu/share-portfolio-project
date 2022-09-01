@@ -1,17 +1,18 @@
 // 패키지 임포트
-import cors from 'cors';
-import express from 'express';
-import fs from 'fs';
-import path from 'path';
+import cors from "cors";
+import express from "express";
+import fs from "fs";
+import path from "path";
 
 // 라우터 임포트
-import { userAuthRouter } from './routers/userRouter';
-import { educationRouter } from './routers/educationRouter';
-import { awardRouter } from './routers/awardRouter';
-import { certificationRouter } from './routers/certificationRouter';
-import { projectRouter } from './routers/projectRouter';
+import { userAuthRouter } from "./routers/userRouter";
+import { educationRouter } from "./routers/educationRouter";
+import { awardRouter } from "./routers/awardRouter";
+import { certificationRouter } from "./routers/certificationRouter";
+import { projectRouter } from "./routers/projectRouter";
+import { commentRouter } from "./routers/commentRouter";
 
-import { errorMiddleware } from './middlewares/errorMiddleware';
+import { errorMiddleware } from "./middlewares/errorMiddleware";
 
 const app = express();
 
@@ -24,28 +25,29 @@ app.use(cors());
 // express.static: 정적 파일 제공
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use('/user/profileImage', express.static(path.join(__dirname, 'uploads')));
+app.use("/user/profileImage", express.static(path.join(__dirname, "uploads")));
 
 /**
  * uploads 파일 생성
  */
 try {
-  fs.readdirSync('src/uploads');
+  fs.readdirSync("src/uploads");
 } catch (err) {
-  fs.mkdirSync('src/uploads');
+  fs.mkdirSync("src/uploads");
 }
 
 // 기본 페이지
-app.get('/', (req, res) => {
-  res.send('안녕하세요, 레이서 프로젝트 API 입니다.');
+app.get("/", (req, res) => {
+  res.send("안녕하세요, 레이서 프로젝트 API 입니다.");
 });
 
 // router, service 구현 (userAuthRouter는 맨 위에 있어야 함.)
 app.use(userAuthRouter);
-app.use('/api/education', educationRouter);
-app.use('/api/award', awardRouter);
-app.use('/api/certification', certificationRouter);
-app.use('/api/project', projectRouter);
+app.use("/api/education", educationRouter);
+app.use("/api/award", awardRouter);
+app.use("/api/certification", certificationRouter);
+app.use("/api/project", projectRouter);
+app.use("/api/comment", commentRouter);
 
 // 순서 중요 (router 에서 next() 시 아래의 에러 핸들링  middleware로 전달됨)
 app.use(errorMiddleware);

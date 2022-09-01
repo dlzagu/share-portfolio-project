@@ -29,6 +29,10 @@ class Comment {
     );
     return updatedComment;
   }
+  static async delete({ commentId }) {
+    const ret = await CommentModel.findOneAndDelete({ _id: commentId });
+    return ret;
+  }
 }
 
 export { Comment };

@@ -4,14 +4,19 @@ import styled from "styled-components";
 import { MdDelete, MdCreate } from "react-icons/md";
 import * as Api from "../../api";
 import CommentEdit from "./CommentEdit";
+import useModal from "../../hooks/useModal";
+import ConfirmModal from "../modal/ConfirmModal";
 import { UserStateContext } from "../../App";
 
-const ContentCard = ({ comment, comment_id, setComments, fetch }) => {
+const ContentCard = ({ comment, setComments, fetch }) => {
   const [isEdit, setIsEdit] = useState(false);
   const userState = useContext(UserStateContext);
   const loginId = userState.user?.id;
-  const handleDelete = async () => {
-    await Api.delete("comments", comment_id);
+  const [isShow, handleShowButtonClickEvent, handleCloseButtonClickEvent] =
+    useModal(false);
+
+  const handleDeleteComment = async () => {
+    await Api.delete("api/comment", comment._id);
     fetch();
   };
 
@@ -32,7 +37,7 @@ const ContentCard = ({ comment, comment_id, setComments, fetch }) => {
                   />
                 </Edit>
                 <Remove>
-                  <MdDelete onClick={handleDelete} />
+                  <MdDelete onClick={handleShowButtonClickEvent} />
                 </Remove>
               </IconBlock>
             )}
@@ -46,6 +51,12 @@ const ContentCard = ({ comment, comment_id, setComments, fetch }) => {
           />
         )}
       </Card>
+      <ConfirmModal
+        isShow={isShow}
+        onCloseButtonClickEvent={handleCloseButtonClickEvent}
+        onCheckButtonClickEvent={handleDeleteComment}
+        msg={`해당 댓글을 삭제하시겠습니까?`}
+      />
     </CardItemBlock>
   );
 };

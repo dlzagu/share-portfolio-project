@@ -48,7 +48,6 @@ commentRouter.get("/list/:id", login_required, async (req, res, next) => {
   }
 });
 
-export { commentRouter };
 //수정
 commentRouter.put("/:id", login_required, async (req, res, next) => {
   try {
@@ -72,3 +71,22 @@ commentRouter.put("/:id", login_required, async (req, res, next) => {
     next(err);
   }
 });
+
+commentRouter.delete("/:id", login_required, async (req, res, next) => {
+  try {
+    //URI에서 수정할 comment의 id를 받아옴
+    const commentId = req.params.id;
+
+    const deletedComment = await CommentService.deleteComment({ commentId });
+
+    if (deletedComment.errorMessage) {
+      throw new Error(deletedComment.errorMessage);
+    }
+
+    res.status(200).json(deletedComment);
+  } catch (err) {
+    next(err);
+  }
+});
+
+export { commentRouter };

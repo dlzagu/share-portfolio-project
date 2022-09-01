@@ -34,6 +34,11 @@ class CommentService {
     const comment = await Comment.update({ commentId, toUpdate });
     return comment;
   }
+  static async deleteComment({ commentId }) {
+    const comment = await Comment.delete({ commentId });
+
+    return comment;
+  }
 }
 
 export { CommentService };

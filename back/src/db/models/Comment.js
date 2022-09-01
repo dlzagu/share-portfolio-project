@@ -10,10 +10,10 @@ class Comment {
     return createdNewComment;
   }
 
-  static async findByUser({ writerUser, ownerUser }) {
-    const comments = await CommentModel.findOne({
-      $and: [{ writerUser }, { ownerUser }],
-    }).populate("writerUser", "email id name -_id");
+  static async findByUsers({ ownerUser }) {
+    const comments = await CommentModel.find({ ownerUser })
+      .sort("createdAt")
+      .populate("writerUser", "email id name -_id");
     return comments;
   }
 }

@@ -10,19 +10,20 @@ const ContentCard = ({ comment, comment_id, setComments, fetch }) => {
   const [isEdit, setIsEdit] = useState(false);
   const userState = useContext(UserStateContext);
   const loginId = userState.user.id;
+  console.log("comment", comment);
   const handleDelete = async () => {
     await Api.delete("comments", comment_id);
     fetch();
   };
 
   return (
-    <CardItemBlock key={comment_id}>
+    <CardItemBlock>
       <Card scrollable="true">
         {!isEdit ? (
           <>
-            {comment.writer.name} : {comment.comment}
+            {comment.writerUser.name} : {comment.comment}
             {/* 자신이 쓴 댓글만 수정, 삭제 할 수 있도록 조건부 렌더링 */}
-            {loginId === comment.writer.id && (
+            {loginId === comment.writerUser.id && (
               <IconBlock>
                 <Edit>
                   <MdCreate

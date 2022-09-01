@@ -8,7 +8,7 @@ const ContentForm = ({ portfolioOwnerId, writerId }) => {
 
   const fetch = async () => {
     try {
-      const response = await Api.get("commentlist", portfolioOwnerId);
+      const response = await Api.get(`api/comment/list`, portfolioOwnerId);
       setComments(response.data);
     } catch (e) {
       console.log(e);

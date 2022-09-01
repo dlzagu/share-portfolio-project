@@ -8,7 +8,7 @@ const Contents = ({ comments, setComments, fetch }) => {
       {comments.map((comment) => (
         <CommentCard
           comment={comment}
-          comment_id={comment.id}
+          key={comment._id}
           setComments={setComments}
           fetch={fetch}
         />

@@ -31,10 +31,14 @@ commentRouter.post("/:id", login_required, async (req, res, next) => {
 });
 
 //특정유저의 전체 댓글 조회
-commentRouter.get("/list/:user_id", login_required, async (req, res, next) => {
+commentRouter.get("/list/:id", login_required, async (req, res, next) => {
   try {
-    const user_id = req.params.user_id;
-    const commentlist = await CommentService.getComments({ userId: user_id });
+    const ownerUserId = req.params.id;
+
+    console.log("hi", ownerUserId);
+    const commentlist = await CommentService.getComments({
+      ownerUserId,
+    });
 
     if (commentlist.errorMessage) {
       throw new Error(commentlist.errorMessage);
